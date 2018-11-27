@@ -1,0 +1,19 @@
+<script>
+    window.addEventListener('load', async function () {
+			var acc = await accf();
+			var datas = await ContractCustomer.methods.getAll(10,0).call({
+					from: acc,
+					gasPrice: gasPrice,
+					gasLimit: gasLimit
+			});
+			var dataoke = []
+			datas.forEach(element => {
+				if(element[0]!=0){
+					dataoke.push(element)
+				}
+			});
+			$('#bootstrap-data-table').DataTable({
+				data: dataoke
+			});
+		})
+</script>

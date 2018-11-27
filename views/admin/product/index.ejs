@@ -31,21 +31,4 @@
 		</div>
 	</div>
 </div>
-
-<script>
-    window.addEventListener('load', async function () {
-			var acc = await accf();
-			var datas = await ContractProduct.methods.getAll(10,0).call({
-					from: acc
-			});
-			var dataoke = []
-			datas.forEach(element => {
-				if(element[0]!=0){
-					dataoke.push(element)
-				}
-			});
-			$('#bootstrap-data-table').DataTable({
-				data: dataoke
-			});
-		})
-</script>
+<% include ../../../public/BE/admin/product/index.vinsofts %>

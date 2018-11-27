@@ -1,0 +1,42 @@
+<script>
+window.addEventListener('load', async function () {
+    acc = await accf();
+    contractWarranty = new web3.eth.Contract(abiWarranty, '<%=id%>');
+    var detail = await contractWarranty.methods.convention().call();
+    var product = await ContractProduct.methods.productDetail(detail['idProduct']).call({
+        from: acc
+    });
+    $("#nameProduct").text(product["name"])
+    $("#manufacturerProduct").text(product['manufacturer'])
+    $("#MFG").text(product['MFG'])
+    $("#EXP").text(product['EXP'])
+    $("#state").text(product['state'])
+    $("#productId").text(product['id'])
+
+    //get ben A
+    var uA = await ContractMaster.methods.getAgency(detail['employer']).call();
+    $("#nameA").text(uA['name'])
+    $("#phoneA").text(uA['phoneNumber'])
+    $("#idA").text(uA['id'])
+    $("#homeA").text(uA['homeAddr'])
+    if(uA['Type']==1){
+        $("#typeA").text('Custommer')
+    }else if(uA['Type']==2){
+        $("#typeA").text('Agency')
+    }else if(uA['Type']==3){
+        $("#typeA").text('Admin')
+    }else{
+        $("#typeA").text('Unregistered')
+    }
+    $("#addressA").text(detail['employer'])
+
+    //get ben B
+    var uB = await ContractCustomer.methods.accountDetail(detail['buyer']).call();
+    console.log(uB)
+
+    $("#nameB").text(uB['name'])
+    $("#phoneB").text(uB['phoneNumber'])
+    $("#homeB").text(uB['homeAddr'])
+    $("#addressB").text(detail['buyer'])
+})
+</script>

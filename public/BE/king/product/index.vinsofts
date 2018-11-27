@@ -1,0 +1,21 @@
+<script>
+    window.addEventListener('load', async function () {
+			var acc = await accf();
+			var datas = await ContractMaster.methods.getListContract(10,0,2).call({
+					from: acc
+			});
+			var dataoke = []
+			datas.forEach(element => {
+				if(element['addressContract']!=0){
+					dataoke.push(element)
+				}
+			});
+			$('#bootstrap-data-table').DataTable({
+				data: dataoke,
+				columns: [
+            { title: "Address Owner" },
+            { title: "Address Contract" }
+        ]
+			});
+		})
+</script>

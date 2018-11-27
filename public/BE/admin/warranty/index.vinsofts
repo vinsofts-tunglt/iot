@@ -1,0 +1,34 @@
+<script>
+    window.addEventListener('load', async function () {
+			var acc = await accf();
+			var datas = await ContractMaster.methods.getListContractWarranty(acc).call({
+					from: acc,
+					gasPrice: gasPrice,
+					gasLimit: gasLimit
+			});
+			var dataoke = []
+			var count = 1;
+			datas.forEach(element => {
+				dataoke.push([count,element])
+				count++;
+			});
+			var table = $('#bootstrap-data-table').DataTable({
+				data: dataoke,
+				columnDefs : [
+					{
+            targets: 2,
+            data: null,
+            defaultContent: "<button class='btn detail'>Detail</button>  <button class='btn byer'>Add Byer</button>"
+					}
+				]
+			});
+			$('#bootstrap-data-table tbody').on( 'click', 'button.btn.detail', function () {
+				var data = table.row( $(this).parents('tr') ).data();
+				location.href = basenow+"detail/"+data[1];
+			});
+			$('#bootstrap-data-table tbody').on( 'click', 'button.btn.byer', function () {
+				var data = table.row( $(this).parents('tr') ).data();
+				location.href = basenow+"byer/"+data[1];
+			});
+		})
+</script>

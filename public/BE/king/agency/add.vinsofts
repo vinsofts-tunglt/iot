@@ -1,0 +1,83 @@
+<script>
+    accf().then(acc=>{
+        ContractMaster.methods.getListContract(10,0,1).call({
+                from: acc,
+                gasPrice: gasPrice,
+                gasLimit: gasLimit
+            }).then(datas => {
+                datas.forEach(element => {
+                if(element['addressContract']!=0 && element['owner']==0){
+                    $("#AddressCustomer").empty();
+                    $("#AddressCustomer").append(`<option >${element["addressContract"]}</option>`);
+                }
+            });
+        });
+        ContractMaster.methods.getListContract(10,0,2).call({
+                from: acc,
+                gasPrice: gasPrice,
+                gasLimit: gasLimit
+            }).then(datas => {
+                datas.forEach(element => {
+                if(element['addressContract']!=0 && element['owner']==0){
+                    $("#AddressProduct").empty();
+                    $("#AddressProduct").append(`<option >${element["addressContract"]}</option>`);
+                }
+            });
+        });
+    })
+    
+
+    <% if(type==2) { %>
+    
+    window.addEventListener('load', async function () {
+        var acc = await accf();
+        var accview = "{{id}}"
+        ContractMaster.methods.getAgency(accview).call({
+            from: acc,
+            gasPrice: gasPrice,
+            gasLimit: gasLimit
+        }).then(datas => {
+            $('#address').val(datas['owner']);
+            $('#name').val(datas['name']);
+            $('#homeAddr').val(datas['homeAddr']);
+            $('#phone').val(datas['phoneNumber']);
+            $('#age').val(datas['age']);
+            $('#type').val(datas['Type']);
+            $('#AddressCustomer').val(datas['addressCustomer']);
+            $('#AddressProduct').val(datas['addressProduct']);
+        });
+    })
+    
+    <% } %>
+    
+    async function btnSubmit() {
+        var address = $('#address').val();
+        var name = $('#name').val();
+        var homeAddr = $('#homeAddr').val();
+        var phone = $('#phone').val();
+        var type = parseInt($('#type').val());
+        var AddressCustomer = $('#AddressCustomer').val();
+        var AddressProduct = $('#AddressProduct').val();
+        var acc = await accf();
+
+       <% if(type==1) { %>
+        ContractMaster.methods.registerAgency(address, name, homeAddr, phone, type,AddressCustomer,AddressProduct).send({
+            from: acc,
+            gasPrice: gasPrice,
+            gasLimit: gasLimit
+        }).then((e) => {
+            console.log(e);
+            history.go(-1)
+        });
+        <% }else if(type==2) { %>
+        ContractMaster.methods.updateAgency(address, name, homeAddr, phone, type,AddressCustomer,AddressProduct).send({
+            from: acc,
+            gasPrice: gasPrice,
+            gasLimit: gasLimit
+        }).then((e) => {
+            console.log(e); 
+            history.go(-1)
+        });
+        <% } %>
+    }
+</script>
