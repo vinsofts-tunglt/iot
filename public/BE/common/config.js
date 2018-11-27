@@ -698,18 +698,18 @@ var changeAccRole = (acc) => {
       location.href = 'admin'
     } else {
       location.href = '/'
-      $("body").html("hien nut check ")
     }
   });
 }
-var loginAcc = async () => {
-  var acc = await accf();
-  changeAccRole(acc)
-}
-// loginAcc();
+
 setInterval(async () => {
   var accs = await accf();
   var account = localStorage.getItem('currentAccount');
+  if (account!='undefined' && account){
+    $("#currentAccount").text("Hi: " + account)
+  }else{
+    $("#currentAccount").text('')
+  }
   if (accs !== account) {
     account = accs;
     changeAccRole(accs);
