@@ -8,3 +8,28 @@
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 <script src="web3.min.js"></script>
 <script src="BE/common/config.js"></script>
+<script>
+  try{
+    web3.eth.getAccounts().then(accs=>{
+      ContractMaster.methods.getAgency(accs[0]).call().then(datas => {
+        switch(datas['Type']){
+          case "1":
+          if(!basenow.includes('master')){
+            location.href = '/'
+          }
+          break;
+          case "2":
+          if(!basenow.includes('admin')){
+            location.href = '/'
+          }
+          break;
+          default:
+          location.href = '/'
+          break;
+        }
+      });
+    });
+  } catch (error) {
+    location.href = '/'
+  } 
+</script>

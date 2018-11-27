@@ -687,31 +687,38 @@ var accf = async () => {
 }
 
 var changeAccRole = (acc) => {
+  var account = localStorage.getItem('currentAccount')
+  if (acc !== account) {
+    location.href = '/'
+  }
   localStorage.setItem('currentAccount', acc)
-  ContractMaster.methods.getAgency(acc).call().then(datas => {
-    console.log("type user:", datas['Type'])
-    if (datas['Type'] == 1) {
-      location.href = 'master'
-    } else if (datas['Type'] == 2) {
-      localStorage.setItem('addressContractCustomer', datas['addressCustomer']);
-      localStorage.setItem('addressContractProduct', datas['addressProduct']);
-      location.href = 'admin'
-    } else {
-      location.href = '/'
-    }
-  });
+  try {
+    ContractMaster.methods.getAgency(acc).call().then(datas => {
+      $("#currentAccountli").css('display', 'block')
+      $("#currentAccount").text("Hi: " + acc)
+      console.log("type user:", datas['Type'])
+      if (datas['Type'] == 1) {
+        if ($("#login").length == 0) {
+          $("#loginhiiden").append(`<li id="login"><a href="master">Login</a></li>`)
+        }
+      } else if (datas['Type'] == 2) {
+        localStorage.setItem('addressContractCustomer', datas['addressCustomer']);
+        localStorage.setItem('addressContractProduct', datas['addressProduct']);
+        if ($("#login").length == 0) {
+          $("#loginhiiden").append(`<li id="login"><a href="admin" >Login</a></li>`)
+        }
+      } else {
+        
+      }
+      $("#login").css('display', 'block')
+    });
+  } catch (error) {
+    $("#currentAccountli").css('display', 'none')
+    $("#login").css('display', 'none')
+  }
 }
 
 setInterval(async () => {
   var accs = await accf();
-  var account = localStorage.getItem('currentAccount');
-  if (account!='undefined' && account){
-    $("#currentAccount").text("Hi: " + account)
-  }else{
-    $("#currentAccount").text('')
-  }
-  if (accs !== account) {
-    account = accs;
-    changeAccRole(accs);
-  }
+  changeAccRole(accs);
 }, 2000);
