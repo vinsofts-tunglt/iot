@@ -45,7 +45,6 @@ contract EC {
     }
 }
 
-
 /*
 ************ SafeMath ******************
 */
@@ -116,128 +115,6 @@ contract Owner {
     
 }
 
-/* 
-************ People ********************* 
-*/
-contract People is Owner {
-    struct Person {
-        address owner;
-        string name;
-        string homeAddr;
-        uint32 phoneNumber;
-        uint8 age;
-        uint8 Type; // 1 is employer, 2 is buyer default is buyer
-    }
-    
-    mapping(address => Person) private persons;
-    address[] private avaiablePersons;
-    
-    function register(
-        address _owner, 
-        string _name, 
-        string _homeAddr, 
-        uint32 _phoneNumber,
-        uint8 _age,
-        uint8 _Type
-    ) 
-        external 
-        onlyAdmin 
-    {
-        require(persons[_owner].owner == 0);
-            
-        Person memory newPerson = Person(_owner, _name, _homeAddr, _phoneNumber, _age, _Type);
-        persons[_owner] = newPerson;
-        avaiablePersons.push(_owner);
-    }
-    
-    function accountDetail(
-        address _owner
-    ) 
-        external 
-        view 
-        returns(Person) 
-    {
-        return persons[_owner];
-    }
-    
-    function updateAccount(
-        string _name,
-        string _homeAddr,
-        uint32 _phoneNumber,
-        uint8 _age
-    ) 
-        external 
-        onlyOwner(persons[msg.sender].owner) 
-        returns(bool) 
-    {
-        persons[msg.sender].name = _name;
-        persons[msg.sender].homeAddr = _homeAddr;
-        persons[msg.sender].phoneNumber = _phoneNumber;
-        persons[msg.sender].age = _age;
-            
-        return true;
-    }
-    
-    function getAllAccount() external view returns(address[]) {
-        return avaiablePersons;
-    }
-}
-
-/*
-********* Products *********
-*/
-contract Products is Owner {
-    struct Product {
-        uint64 id;
-        uint64 MFG; // manufacturing date
-        uint64 EXP; // expire date
-        uint8 state; // default 100%
-        uint64 idChipIOT; // chipIOT report to parnters about the state of product, I set idChipIOT == id ; because that will be easy for me(coding) and user :)
-        string manufacturer;
-        string name;
-    }    
-    
-    /*
-    **** @Key : id of Product ****
-    **** @Value: Product ****
-    */
-    mapping(uint64 => Product) private products;
-    uint64[] private avaiableProducts;
-    
-    function createProduct(
-        uint64 _MFG, 
-        uint64 _EXP, 
-        uint8 _state,
-        string _manufacturer,
-        string _name
-    ) 
-        external 
-        onlyAdmin 
-    {
-        uint64 idauto = uint64(avaiableProducts.length+1);
-        require(products[idauto].id == 0);
-        Product memory newProduct = Product(idauto, _MFG, _EXP, _state, idauto, _manufacturer, _name);
-        products[idauto] = newProduct;
-        avaiableProducts.push(idauto);
-    }
-    
-    function updateStateOfProduct(uint64 _idChipIOT, uint8 _state) external returns(bool) {
-        // only chipIOT can update the state of product
-        require(products[_idChipIOT].idChipIOT == _idChipIOT);
-        
-        products[_idChipIOT].state = _state;
-        return true;
-    }
-    
-    
-    function productDetail(uint64 _id) external view returns(Product) {
-        return products[_id];
-    }
-    
-    function getAllProducts() external view returns(uint64[]){
-        return avaiableProducts;
-    }
-}
 /*
 ************** IERC20 *****************
 */
@@ -374,13 +251,177 @@ contract Bank is Owner {
     }
 }
 
+/* 
+************ Customer ********************* 
+*/
+contract Customer {
+    using SafeMath for uint256;
+    address private ownerAddress;
+    constructor(address _addressAgency,address _addressMaster) {
+        ownerAddress = _addressAgency;
+        Master(_addressMaster).saveListContract(address(this),1);
+    }
+    modifier onlyDaily() {
+        require(
+            msg.sender == ownerAddress,
+            "Permission denied"
+        );
+        _;    
+    }
+    struct Person {
+        address owner;
+        string name;
+        string homeAddr;
+        uint32 phoneNumber;
+        uint8 age;
+    }
+    
+    mapping(address => Person) private persons;
+    Person[] private personsarray;
+    
+    function register(
+        address _owner, 
+        string _name, 
+        string _homeAddr, 
+        uint32 _phoneNumber,
+        uint8 _age
+    ) 
+        onlyDaily
+        external
+    {
+        require(persons[_owner].owner == 0);
+        Person memory newPerson = Person(_owner, _name, _homeAddr, _phoneNumber, _age);
+        persons[_owner] = newPerson;
+        personsarray.push(newPerson);
+    }
+    
+    function accountDetail(
+        address _owner
+    ) 
+        external 
+        view 
+        returns(Person) 
+    {
+        return persons[_owner];
+    }
+    
+    function updateAccount(
+        string _name,
+        string _homeAddr,
+        uint32 _phoneNumber,
+        uint8 _age
+    ) 
+        external 
+        returns(bool) 
+    {
+        persons[msg.sender].name = _name;
+        persons[msg.sender].homeAddr = _homeAddr;
+        persons[msg.sender].phoneNumber = _phoneNumber;
+        persons[msg.sender].age = _age;
+            
+        return true;
+    }
+    
+    function getAll(uint256 _soluong,uint256 _batdautu) onlyDaily external view returns(Person[]) {
+        require(_soluong<=50,"So luong khong duoc qua 50");
+        Person[] memory temp = new Person[](_soluong);
+        uint8 counter = 0;
+        for (uint i = _batdautu; i < _soluong; i++) {
+            if(personsarray.length>i){
+                temp[counter] = personsarray[i];
+                counter++;
+            }
+        }
+        return temp;
+    }
+}
+
+/*
+********* Products *********
+*/
+contract Products is Owner {
+    
+    address private ownerAddress;
+    constructor(address _addressAgency,address _addressMaster) {
+        ownerAddress = _addressAgency;
+        Master(_addressMaster).saveListContract(address(this),2);
+    }
+    modifier onlyDaily() {
+        require(
+            msg.sender == ownerAddress,
+            "Permission denied"
+        );
+        _;    
+    }
+    struct Product {
+        uint64 id;
+        uint64 MFG; // manufacturing date
+        uint64 EXP; // expire date
+        uint8 state; // default 100%
+        uint64 idChipIOT; // chipIOT report to parnters about the state of product, I set idChipIOT == id ; because that will be easy for me(coding) and user :)
+        string manufacturer;
+        string name;
+    }    
+    
+    /*
+    **** @Key : id of Product ****
+    **** @Value: Product ****
+    */
+    mapping(uint64 => Product) private productsmap;
+    Product[] private products;
+    
+    function createProduct(
+        uint64 _MFG, 
+        uint64 _EXP, 
+        uint8 _state,
+        string _manufacturer,
+        string _name
+    ) 
+        external 
+        onlyDaily 
+    {
+        uint64 idauto = uint64(products.length+1);
+        require(productsmap[idauto].id == 0);
+        Product memory newProduct = Product(idauto, _MFG, _EXP, _state, idauto, _manufacturer, _name);
+        productsmap[idauto] = newProduct;
+        products.push(newProduct);
+    }
+    
+    function updateStateOfProduct(uint64 _idChipIOT, uint8 _state) external returns(bool) {
+        // only chipIOT can update the state of product
+        require(productsmap[_idChipIOT].idChipIOT == _idChipIOT);
+        
+        productsmap[_idChipIOT].state = _state;
+        return true;
+    }
+    
+    
+    function productDetail(uint64 _id) external view returns(Product) {
+        return productsmap[_id];
+    }
+    
+    function getAll(uint256 _soluong,uint256 _batdautu) onlyDaily external view returns(Product[]) {
+        require(_soluong<=50,"So luong khong duoc qua 50");
+        Product[] memory temp = new Product[](_soluong);
+        uint8 counter = 0;
+        for (uint i = _batdautu; i < _soluong; i++) {
+            if(products.length>i){
+                temp[counter] = products[i];
+                counter++;
+            }
+        }
+        return temp;
+    }
+}
 
 /*
 ****************** Warranty *******************
 */
+
 contract Warranty is Owner {
     
     address ecAddress = 0x36c5804a3f063487c0dc09ae93e47fc6f584f136;
+    address addressMaster = 0xcc92ea0c9362ff7924b9def04ede29058f05aeff;
     
     struct Convention {
         uint64 expireTime;
@@ -412,20 +453,12 @@ contract Warranty is Owner {
         require(msg.sender == bankAddr);
         _;
     }
-    
     constructor(uint64 _expireTime, uint _compensation, uint64 _idProduct) {
         convention.expireTime = _expireTime;
         convention.compensation = _compensation;
         convention.idProduct = _idProduct;
         convention.employer = msg.sender;
-        // convention = Convention(
-        //     _expireTime, 
-        //     _idProduct, 
-        //     _compensation, 
-        //     msg.sender, 
-        //     0x0, 
-        //     0x0
-        // );
+        Master(addressMaster).setListContractWarranty(address(this),msg.sender);
     }
     
     function createParnter(address _buyer) external onlyAdmin {
@@ -526,27 +559,157 @@ contract Warranty is Owner {
     }
 }
 
-/*
-****************** Ledger *************************
-*/
-contract Ledger is Owner {
+contract Master is Owner {
     address private owner;
-    struct History {
-        address Warranty;
+    
+     modifier onlyAgencyList() {
+        require(
+            agencymap[tx.origin].owner != 0,
+            "Permission denied"
+        );
+        _;    
     }
     
-    mapping(address => History[]) private histories;
+    modifier onlyAdmin2() {
+        require(
+            tx.origin == owner,
+            "Permission denied"
+        );
+        _;    
+    }
+    
+    struct Agency {
+        uint id;
+        address owner;
+        string name;
+        string homeAddr;
+        string phoneNumber;
+        uint8 Type;
+        address addressCustomer;
+        address addressProduct;
+    }
+    
+    struct ContractHitorys {
+        address owner;
+        address addressContract;
+    }
+    mapping(address => Agency) private agencymap;
+    Agency[] private agencys;
+    ContractHitorys[] private ListContractCustomer;
+    ContractHitorys[] private ListContractProduct;
+    
+    mapping(address => address[]) private ListContractWarranty;
+    
+    function getListContractWarranty(address _addressAgency) view public returns(address[]) {
+        return ListContractWarranty[_addressAgency];
+    }
+    function setListContractWarranty(address _contractWarranty,address _contractAgency) public onlyAgencyList {
+        ListContractWarranty[_contractAgency].push(_contractWarranty);
+    }
     
     constructor() public {
         owner = msg.sender;
+        Agency memory newAgency = Agency(1,owner, "Admin Master", "Hà nội", "0969", 1,0x0,0x0);
+        agencymap[owner] = newAgency;
+        agencys.push(newAgency);
     }
     
-    function saveHistory(address _warranty) public onlyAdmin {
-        History memory newData = History(_warranty);
-        histories[msg.sender].push(newData);
+    function registerAgency(
+        address _owner, 
+        string _name, 
+        string _homeAddr, 
+        string _phoneNumber,
+        uint8 _Type,
+        address _addrCustomer,
+        address _addrProduct
+    ) 
+        onlyAdmin
+        public
+    {
+        require(agencymap[_owner].owner == 0);
+        uint idauto = uint(agencys.length+1);
+        Agency memory newAgency = Agency(idauto,_owner, _name, _homeAddr, _phoneNumber, _Type, _addrCustomer, _addrProduct);
+        agencymap[_owner] = newAgency;
+        agencys.push(newAgency);
     }
     
-    function getHistory() external view onlyAdmin returns(History[]) {
-        return histories[msg.sender];
+     
+    function updateAgency(
+        address _owner, 
+        string _name, 
+        string _homeAddr, 
+        string _phoneNumber,
+        uint8 _Type,
+        address _addrCustomer,
+        address _addrProduct
+    ) 
+        onlyAdmin
+        public
+        returns(bool) 
+    {
+        require(agencymap[_owner].owner != 0);
+        agencymap[_owner].name = _name;
+        agencymap[_owner].homeAddr = _homeAddr;
+        agencymap[_owner].phoneNumber = _phoneNumber;
+        agencymap[_owner].Type = _Type;
+        agencymap[_owner].addressCustomer = _addrCustomer;
+        agencymap[_owner].addressProduct = _addrProduct;
+        
+        uint idrray = agencymap[_owner].id - 1;
+        Agency storage updateAgency = agencys[idrray];
+        updateAgency.name = _name;
+        updateAgency.homeAddr = _homeAddr;
+        updateAgency.phoneNumber = _phoneNumber;
+        updateAgency.Type = _Type;
+        updateAgency.addressCustomer = _addrCustomer;
+        updateAgency.addressProduct = _addrProduct;
+            
+        return true;
+    }
+    
+    function getAgency(address _owner) view returns(Agency) {
+        return agencymap[_owner];
+    }
+    
+    function getAll(uint256 _soluong,uint256 _batdautu) onlyAdmin view returns(Agency[]) {
+        require(_soluong<=50,"So luong khong duoc qua 50");
+        Agency[] memory temp = new Agency[](_soluong);
+        uint8 counter = 0;
+        for (uint i = _batdautu; i < _soluong; i++) {
+            if(agencys.length>i){
+                temp[counter] = agencys[i];
+                counter++;
+            }
+        }
+        return temp;
+    }
+    
+    function saveListContract(address _contract,uint8 _loai) public onlyAdmin2 {
+        require(_contract != 0x0);
+        if(_loai==1){
+            ListContractCustomer.push(ContractHitorys(0x0,_contract)); 
+        }else if(_loai==2){
+            ListContractProduct.push(ContractHitorys(0x0,_contract));
+        }
+    }
+    
+    function getListContract(uint256 _soluong,uint256 _batdautu,uint8 _loai) onlyAdmin view returns(ContractHitorys[]) {
+        require(_soluong<=50,"So luong khong duoc qua 50");
+        ContractHitorys[] memory temp = new ContractHitorys[](_soluong);
+        uint8 counter = 0;
+        for (uint i = _batdautu; i < _soluong; i++) {
+            if(_loai==1){
+                if(ListContractCustomer.length>i){
+                    temp[counter] = ListContractCustomer[i];
+                    counter++;
+                }  
+            }else if(_loai==2){
+                if(ListContractProduct.length>i){
+                    temp[counter] = ListContractProduct[i];
+                    counter++;
+                }
+            }
+        }
+        return temp;
     }
 }

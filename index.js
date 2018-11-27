@@ -26,25 +26,34 @@ app.use((req, res, next) => {
 
     next();
 });
-// import indexRouter from './routers/index'
-// app.use('/', indexRouter);
 
-import productRouter from './routers/product'
-app.use('/product', productRouter);
 
-import contractRouter from './routers/contract'
-app.use('/contract', contractRouter);
-
-import customerRouter from './routers/customer'
-app.use('/customer', customerRouter);
-
-app.get('/', (req, res) => {
-    res.render('client',{title:'Flat Admin V.2 - Free Bootstrap Admin Templates'});
+app.use(function (req, res, next) {
+    res.locals.shareall = {
+        url: req.originalUrl
+    }
+    next();
 })
 
-app.get('/admin',(req,res) => {
-    res.render('index',{title:'Flat Admin V.2 - Free Bootstrap Admin Templates'});
+app.use('/admin', function (req, res, next) {
+    res.locals.shareall = {
+        mdun: 'admin'
+    }
+    next();
 })
+import adminRouter from './routers/admin'
+app.use('/admin', adminRouter);
+import masterRouter from './routers/master'
+app.use('/master', function (req, res, next) {
+    res.locals.shareall = {
+        mdun: 'master'
+    }
+    next();
+})
+app.use('/master', masterRouter);
+
+import indexRouter from './routers/index'
+app.use('/', indexRouter);
 
 app.listen(PORT, (err) => {
     if(err) 

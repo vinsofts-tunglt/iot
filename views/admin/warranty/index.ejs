@@ -1,0 +1,63 @@
+<% layout('/admin/admin') -%>
+
+<div class="content">
+	<div class="animated fadeIn">
+		<div class="row">
+			<div class="col-12">
+				<div class="card">
+					<div class="card-header">
+						<strong class="card-title col-8">Warranty Table</strong>
+						<a href="<%=shareall.mdun%>/warranty/add" class="btn btn-success">Add</a>
+					</div>
+					<div class="table-stats order-table ov-h">
+						<table id="bootstrap-data-table" class="table ">
+							<thead>
+								<tr>
+									<th>STT</th>
+									<th>Address Contract</th>
+									<th>Action</th>
+								</tr>
+							</thead>
+							<tbody></tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+    window.addEventListener('load', async function () {
+			var acc = await accf();
+			var datas = await ContractMaster.methods.getListContractWarranty(acc).call({
+					from: acc,
+					gasPrice: gasPrice,
+					gasLimit: gasLimit
+			});
+			var dataoke = []
+			var count = 1;
+			datas.forEach(element => {
+				dataoke.push([count,element])
+				count++;
+			});
+			var table = $('#bootstrap-data-table').DataTable({
+				data: dataoke,
+				columnDefs : [
+					{
+            targets: 2,
+            data: null,
+            defaultContent: "<button class='btn detail'>Detail</button>  <button class='btn byer'>Add Byer</button>"
+					}
+				]
+			});
+			$('#bootstrap-data-table tbody').on( 'click', 'button.btn.detail', function () {
+				var data = table.row( $(this).parents('tr') ).data();
+				location.href = basenow+"detail/"+data[1];
+			});
+			$('#bootstrap-data-table tbody').on( 'click', 'button.btn.byer', function () {
+				var data = table.row( $(this).parents('tr') ).data();
+				location.href = basenow+"byer/"+data[1];
+			});
+		})
+</script>

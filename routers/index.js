@@ -1,16 +1,9 @@
 const router = require('express').Router();
 
-import Home from '../controllers/home'
+// import home controller
+import Home from '../controllers/HomeController'
 
-router.route('/')
-    .get(Home.index);
-
-router.route('/deploycontract')
-    .get(Home.deploycontract)
-    .post(Home.saveaddresscontract)
-    
-router.get('/getaddresscontract',Home.getaddresscontract)
-
-router.route('/login')
+/* GET home page. */
+router.get('/', Home.index);
 
 export default router;

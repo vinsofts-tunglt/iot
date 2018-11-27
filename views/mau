@@ -1,6 +1,5 @@
 <% layout('/layouts/customer') -%>
-<% script('https://code.jquery.com/jquery-3.3.1.min.js') -%>
-<% script('web3.min.js') -%>
-<% script('BE/common/config.js') -%>
+<% script('jsweb3.js') -%>
+<% stylesheet('foo.css') -%>
 <% block('header', "<p>I'm in the header.</p>") -%>
 <% block('footer', "<p>I'm in the footer.</p>") -%>

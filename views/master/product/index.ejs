@@ -1,0 +1,37 @@
+<% layout('/master/master') -%>
+
+<div class="col-12">
+	<div class="card">
+		<div class="card-header">
+			<strong class="card-title col-8">Product Table</strong>
+			<a href="<%=shareall.mdun%>/product/add" class="btn btn-success">Add</a>
+		</div>
+		<div class="table-stats order-table ov-h">
+			<table id="bootstrap-data-table" class="table ">
+			</table>
+		</div>
+	</div>
+</div>
+
+
+<script>
+    window.addEventListener('load', async function () {
+			var acc = await accf();
+			var datas = await ContractMaster.methods.getListContract(10,0,2).call({
+					from: acc
+			});
+			var dataoke = []
+			datas.forEach(element => {
+				if(element['addressContract']!=0){
+					dataoke.push(element)
+				}
+			});
+			$('#bootstrap-data-table').DataTable({
+				data: dataoke,
+				columns: [
+            { title: "Address Owner" },
+            { title: "Address Contract" }
+        ]
+			});
+		})
+</script>
