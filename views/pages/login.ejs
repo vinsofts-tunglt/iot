@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+     <title>
+          <% if (locals.title) { %>
+          <%= title %>
+          <% }else{ %>
+          Admin Dashboard
+          <% } %>
+     </title>
+     <% include ./metastyle.ejs %>
+</head>
+
+<body class="flat-blue login-page">
+     <div class="container">
+          <%- body %>
+     </div>
+</body>
+</html>

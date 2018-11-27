@@ -1,0 +1,52 @@
+<% layout('/pages/index') -%>
+<div class="container-fluid">
+    <div class="side-body">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <div class="title">
+                                <%=type.replace('/','').toUpperCase()%>
+                            </div>
+                        </div>
+                        <a href="<%=type%>add" type="button" class="pull-right btn btn-success"> ADD </a>
+                    </div>
+                    <div class="card-body">
+                        <table class=" table table-striped" cellspacing="0" width="100%">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>ID CONTRACT</th>
+                                    <th>Bên A</th>
+                                    <th>Bên B</th>
+                                    <th>Sản phẩm</th>
+                                    <th>Thời gian</th>
+                                    <th>Tiền đền bù</th>
+                                    <th>Tuy chọn</th>
+                                </tr>
+                            </thead>
+                            <tbody id="datas"> </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    window.addEventListener('load', async function () {
+        var acc = await web3.eth.getAccounts();
+        var datas = await ContractLedger.methods.getHistory().call({
+            from: acc[0]
+        });
+        $("#datas").empty();
+        datas.forEach(async (v, k) => {
+            var Warranty = new web3.eth.Contract(abiWarranty, v['Warranty']);
+            var convention = await Warranty.methods.convention().call();
+            console.log(convention)
+                $("#datas").append(`<tr><td>${k+1}</td> <td> ${v['Warranty']}</td> <td>${convention['employer']}</td><td><a href="custommer/${v['Warranty']}/${convention['buyer']}" > ${convention['buyer']}</a></td><td>${convention['idProduct']}</td><td>${convention['expireTime']}</td><td>${convention['compensation']}</td> <td><a href="<%=type%>edit/${v['Warranty']}" class="btn btn-warning">Edit</a> </td></tr>`)
+        })
+    })
+</script>

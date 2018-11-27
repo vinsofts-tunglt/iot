@@ -1,0 +1,55 @@
+<% layout('/pages/index') -%>
+<div class="container-fluid">
+    <div class="side-body">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <div class="title"></div>
+                        </div>
+                        <a href="<%=type%>add" type="button" class="pull-right btn btn-success" id="addd"> ADD </a>
+                    </div>
+                    <div class="card-body">
+                        <table class=" table table-striped" cellspacing="0" width="100%">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Name</th>
+                                    <th>Manufacturer</th>
+                                    <th>MFG</th>
+                                    <th>EXP</th>
+                                    <th>State</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody id="datas"> </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    window.addEventListener('load', function () {
+        ContractProduct.methods.getAllProducts().call().then(datas => {
+            $("#datas").empty();
+            datas.forEach(async (v) => {
+                var detail = await ContractProduct.methods.productDetail(v).call();
+                $("#datas").append(
+                    `<tr>
+                <td>${detail['id']}</td>
+                <td>${detail['name']}</td>
+                <td>${detail['manufacturer']}</td>
+                <td>${detail['MFG']}</td>
+                <td>${detail['EXP']}</td>
+                <td>${detail['state']}</td>
+                <td><a href="<%=type%>edit?id=${detail['id']}">Edit</a></td>
+                </tr>`
+                )
+            })
+        });
+    })
+</script>

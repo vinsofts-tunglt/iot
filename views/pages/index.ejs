@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+     <title>
+          <% if (title) { %>
+          <%= title %>
+          <% }else{ %>
+          Admin Dashboard
+          <% } %>
+     </title>
+     <% include ./metastyle.ejs %>
+</head>
+
+<body class="flat-blue">
+     <div class="app-container">
+          <div class="row content-container">
+               <% include ./header.ejs %>
+               <% include ./menu.ejs %>
+               <div class="container-fluid">
+                    <%- body %>
+               </div>
+               <% include ./footer.ejs %>
+          </div>
+     </div>
+</body>
+</html>

@@ -1,0 +1,12 @@
+version: '2.1'
+
+services:
+  vins-iot-hackathon:
+    image: vins-iot-hackathon
+    build: .
+    environment:
+      NODE_ENV: 3000
+    ports:
+      - 3000:3000
+    volumes: 
+      - ./:/usr/src/app

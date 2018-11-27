@@ -1,0 +1,82 @@
+<% layout('/pages/index') -%>
+<div class="container-fluid">
+  <div class="side-body">
+    <div class="row">
+      <div class="col-xs-6">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <div class="title">ADD
+                <%=type.replace('/','').toUpperCase()%>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <!-- <form method="POST"> -->
+            <div class="form-group">
+              <label for="expireTime">expireTime</label>
+              <input type="text" class="form-control" id="expireTime" name="expireTime" placeholder="expireTime">
+            </div>
+            <div class="form-group">
+              <label for="compensation">compensation</label>
+              <input type="text" class="form-control" id="compensation" name="compensation" placeholder="compensation">
+            </div>
+            <div class="form-group">
+              <label for="idProduct">idProduct</label>
+              <select id="idProduct" name="idProduct"></select>
+            </div>
+            <button type="button" class="btn btn-success" onclick="Create()">Submit</button>
+            <!-- </form> -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  async function Create() {
+
+    var idProduct = parseInt($("#idProduct").val());
+    var compensation = parseInt($("#compensation").val());
+    var expireTime = parseInt($("#expireTime").val());
+    if (confirm("Bạn có đồng ý tạo Hợp đồng mới")) {
+      var acc = await web3.eth.getAccounts();
+      var Mycontract = ContractWarrantyabi.deploy({
+        data: dataWarranty,
+        arguments: [expireTime, compensation, idProduct]
+      })
+      Mycontract.send({
+          from: acc[0],
+          gasPrice: web3.utils.toHex(web3.utils.toWei('40', 'gwei')),
+          gasLimit: web3.utils.toHex(3000000)
+        })
+        .on('transactionHash', function (transactionHash) {
+          console.log('transactionHash', transactionHash)
+        })
+        .then(async function (newContractInstance) {
+          var ads = newContractInstance.options.address;
+          console.log(ads)
+          var saveHistory = await ContractLedger.methods.saveHistory(ads).send({
+            from: acc[0],
+            gasPrice: web3.utils.toHex(web3.utils.toWei('40', 'gwei')),
+            gasLimit: web3.utils.toHex(3000000)
+          });
+          if (confirm(ads)) {
+            location.href = urlbase + "/contract/edit/" + ads;
+          }
+        });
+    }
+  }
+
+  window.addEventListener('load', function () {
+    $("#expireTime").val(Date.now() + 1 * 24 * 60 * 60 * 1000)
+    ContractProduct.methods.getAllProducts().call().then(datas => {
+      datas.forEach(async (v, k) => {
+        $("#idProduct").append(
+          `<option value="${v}">${v}</option>`
+        )
+      })
+    });
+  })
+</script>
