@@ -31,7 +31,7 @@
     
     window.addEventListener('load', async function () {
         var acc = await accf();
-        var accview = "{{id}}"
+        var accview = "<%=id%>"
         ContractMaster.methods.getAgency(accview).call({
             from: acc,
             gasPrice: gasPrice,
