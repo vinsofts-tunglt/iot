@@ -688,7 +688,7 @@ var accf = async () => {
 
 var changeAccRole = (acc) => {
   var account = localStorage.getItem('currentAccount')
-  if (acc !== account) {
+  if (acc !== account && account != "undefined" && account) {
     location.href = '/'
   }
   localStorage.setItem('currentAccount', acc)
