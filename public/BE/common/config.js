@@ -631,8 +631,7 @@ var abiWarranty = [{
 
 
 
-
-var addressContractMaster = '0xf79107d581fcf37369318aaa282aec6c762f77d3'
+var addressContractMaster = '0x1c6983b29b993b0036154e9ee90f9222f800ce6a'
 var addressContractCustomer = localStorage.getItem('addressContractCustomer');
 var addressContractProduct = localStorage.getItem('addressContractProduct');
 var addressContractEC = '0x36c5804a3f063487c0dc09ae93e47fc6f584f136'
@@ -646,6 +645,10 @@ console.log("Contract Master:", addressContractMaster)
 console.log("Contract product:", addressContractProduct)
 console.log("Contract Customer:", addressContractCustomer)
 
+
+console.log("ACC Master:", "0x87b728b61d8a22dF222e9aAa06b08b3f9fBf769B", "2A9E2FC73B905B0744250A672A02A8821CD126A8DC0DE834772C670F19533B1D")
+console.log("ACC Agency1:", "0x0d720eBd5F258EF16A65696322227F242CA38656", "B911E06F6EFF97E50B662FE217710031F6AA4958F00E7813B392B6CABC772FAE")
+console.log("ACC Customer1:", "0x60c4583e47565B75f6b3eCD1852eCd561dAa695C", "5742614E4950FB5F32AE3EB11542C43C5AAF989BD5E818639B137911B9F90620")
 // admin = '2A9E2FC73B905B0744250A672A02A8821CD126A8DC0DE834772C670F19533B1D'
 // nhasanxuat1 = 'B911E06F6EFF97E50B662FE217710031F6AA4958F00E7813B392B6CABC772FAE'
 // nguoimuahang1 = '5742614E4950FB5F32AE3EB11542C43C5AAF989BD5E818639B137911B9F90620'
@@ -665,7 +668,7 @@ var gasLimit = web3.utils.toHex(3000000)
 
 var accf = async () => {
   var accs = await web3.eth.getAccounts();
-  console.log("Địa chỉ người dùng hiện tại metamask", accs[0])
+  // console.log("Địa chỉ người dùng hiện tại metamask", accs[0])
   return accs[0];
 }
 
@@ -678,8 +681,7 @@ var changeAccRole = (acc) => {
   try {
     ContractMaster.methods.getAgency(acc).call().then(datas => {
       $("#currentAccountli").css('display', 'block')
-      $("#currentAccount").text("Hi: " + acc)
-      console.log("type user:", datas['Type'])
+      $("#currentAccount").text(`Hi: ${datas['name']}: ${acc}`)
       if (datas['Type'] == 1) {
         if ($("#login").length == 0) {
           $("#loginhiiden").append(`<li id="login"><a href="master">Login</a></li>`)
@@ -691,7 +693,7 @@ var changeAccRole = (acc) => {
           $("#loginhiiden").append(`<li id="login"><a href="admin" >Login</a></li>`)
         }
       } else {
-        
+        // truong hợp là khác hàng hệ thống
       }
       $("#login").css('display', 'block')
     });

@@ -609,7 +609,7 @@ contract Master is Owner {
     {
         require(agencymap[_owner].owner == 0);
         uint idauto = uint(agencys.length+1);
-        Agency memory newAgency = Agency(idauto,_owner, _name, _homeAddr, _phoneNumber, 1, _addrCustomer, _addrProduct);
+        Agency memory newAgency = Agency(idauto,_owner, _name, _homeAddr, _phoneNumber, 2, _addrCustomer, _addrProduct);
         agencymap[_owner] = newAgency;
         agencys.push(newAgency);
     }
