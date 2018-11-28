@@ -3,12 +3,12 @@ const mdun = 'master'
 module.exports = {
     index: (req, res) => {
         res.render(mdun + '/dashboard', {
-            title: 'Dashboard ' + mdun
+            title: '' 
         });
     },
     agency: (req, res) => {
         res.render(mdun + '/agency', {
-            title: 'Agency ' + mdun
+            title: 'Agency '
         });
     },
     agencyadd: (req, res) => {
@@ -26,22 +26,22 @@ module.exports = {
     },
     customer: (req, res) => {
         res.render(mdun + '/customer', {
-            title: 'List Sổ  Customer ' + mdun
+            title: 'Customer Admin' 
         });
     },
     addcustomer: (req, res) => {
         res.render(mdun + '/customer/add', {
-            title: 'Add Sổ Customer ' + mdun
+            title: 'Add Address Customer' 
         })
     },
     product: (req, res) => {
         res.render(mdun + '/product', {
-            title: 'List Sổ  Product ' + mdun
+            title: 'Product List '
         });
     },
     addproduct: (req, res) => {
         res.render(mdun + '/product/add', {
-            title: 'Add Sổ Product ' + mdun
+            title: 'Add Address Product '
         })
     }
 }

@@ -7,7 +7,7 @@
             }).then(datas => {
                 datas.forEach(element => {
                 if(element['addressContract']!=0 && element['owner']==0){
-                    $("#AddressCustomer").empty();
+                    // $("#AddressCustomer").empty();
                     $("#AddressCustomer").append(`<option >${element["addressContract"]}</option>`);
                 }
             });
@@ -19,7 +19,7 @@
             }).then(datas => {
                 datas.forEach(element => {
                 if(element['addressContract']!=0 && element['owner']==0){
-                    $("#AddressProduct").empty();
+                    // $("#AddressProduct").empty();
                     $("#AddressProduct").append(`<option >${element["addressContract"]}</option>`);
                 }
             });
