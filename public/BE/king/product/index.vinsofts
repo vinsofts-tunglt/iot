@@ -1,19 +1,22 @@
 <script>
     window.addEventListener('load', async function () {
 			var acc = await accf();
-			var datas = await ContractMaster.methods.getListContract(10,0,2).call({
+			var datas = await ContractMaster.methods.getListContract(2).call({
 					from: acc
 			});
 			var dataoke = []
+			var count = 1;
 			datas.forEach(element => {
 				if(element['addressContract']!=0){
+					element[0] = count;
 					dataoke.push(element)
+					count++;
 				}
 			});
 			$('#bootstrap-data-table').DataTable({
 				data: dataoke,
 				columns: [
-            { title: "Address Owner" },
+            { title: "STT" },
             { title: "Address Contract" }
         ]
 			});

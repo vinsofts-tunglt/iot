@@ -1,7 +1,7 @@
 <script>
     window.addEventListener('load', async function () {
 			var acc = await accf();
-			var datas = await ContractProduct.methods.getAll(10,0).call({
+			var datas = await ContractProduct.methods.getAll().call({
 					from: acc
 			});
 			var dataoke = []

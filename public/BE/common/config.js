@@ -6,37 +6,16 @@ console.log("basenow", basenow)
 var abiMaster = [{
   "constant": true,
   "inputs": [{
-    "name": "_soluong",
-    "type": "uint256"
-  }, {
-    "name": "_batdautu",
-    "type": "uint256"
+    "name": "_type",
+    "type": "uint8"
   }],
-  "name": "getAll",
+  "name": "getListContract",
   "outputs": [{
     "components": [{
-      "name": "id",
-      "type": "uint256"
-    }, {
       "name": "owner",
       "type": "address"
     }, {
-      "name": "name",
-      "type": "string"
-    }, {
-      "name": "homeAddr",
-      "type": "string"
-    }, {
-      "name": "phoneNumber",
-      "type": "string"
-    }, {
-      "name": "Type",
-      "type": "uint8"
-    }, {
-      "name": "addressCustomer",
-      "type": "address"
-    }, {
-      "name": "addressProduct",
+      "name": "addressContract",
       "type": "address"
     }],
     "name": "",
@@ -65,7 +44,7 @@ var abiMaster = [{
     "name": "_contract",
     "type": "address"
   }, {
-    "name": "_loai",
+    "name": "_type",
     "type": "uint8"
   }],
   "name": "saveListContract",
@@ -108,6 +87,42 @@ var abiMaster = [{
     }],
     "name": "",
     "type": "tuple"
+  }],
+  "payable": false,
+  "stateMutability": "view",
+  "type": "function"
+}, {
+  "constant": true,
+  "inputs": [],
+  "name": "getAll",
+  "outputs": [{
+    "components": [{
+      "name": "id",
+      "type": "uint256"
+    }, {
+      "name": "owner",
+      "type": "address"
+    }, {
+      "name": "name",
+      "type": "string"
+    }, {
+      "name": "homeAddr",
+      "type": "string"
+    }, {
+      "name": "phoneNumber",
+      "type": "string"
+    }, {
+      "name": "Type",
+      "type": "uint8"
+    }, {
+      "name": "addressCustomer",
+      "type": "address"
+    }, {
+      "name": "addressProduct",
+      "type": "address"
+    }],
+    "name": "",
+    "type": "tuple[]"
   }],
   "payable": false,
   "stateMutability": "view",
@@ -159,33 +174,6 @@ var abiMaster = [{
   "stateMutability": "nonpayable",
   "type": "function"
 }, {
-  "constant": true,
-  "inputs": [{
-    "name": "_soluong",
-    "type": "uint256"
-  }, {
-    "name": "_batdautu",
-    "type": "uint256"
-  }, {
-    "name": "_loai",
-    "type": "uint8"
-  }],
-  "name": "getListContract",
-  "outputs": [{
-    "components": [{
-      "name": "owner",
-      "type": "address"
-    }, {
-      "name": "addressContract",
-      "type": "address"
-    }],
-    "name": "",
-    "type": "tuple[]"
-  }],
-  "payable": false,
-  "stateMutability": "view",
-  "type": "function"
-}, {
   "constant": false,
   "inputs": [{
     "name": "_owner",
@@ -199,9 +187,6 @@ var abiMaster = [{
   }, {
     "name": "_phoneNumber",
     "type": "string"
-  }, {
-    "name": "_Type",
-    "type": "uint8"
   }, {
     "name": "_addrCustomer",
     "type": "address"
@@ -348,45 +333,6 @@ var abiCustomer = [{
 var abiProduct = [{
   "constant": true,
   "inputs": [{
-    "name": "_soluong",
-    "type": "uint256"
-  }, {
-    "name": "_batdautu",
-    "type": "uint256"
-  }],
-  "name": "getAll",
-  "outputs": [{
-    "components": [{
-      "name": "id",
-      "type": "uint64"
-    }, {
-      "name": "MFG",
-      "type": "uint64"
-    }, {
-      "name": "EXP",
-      "type": "uint64"
-    }, {
-      "name": "state",
-      "type": "uint8"
-    }, {
-      "name": "idChipIOT",
-      "type": "uint64"
-    }, {
-      "name": "manufacturer",
-      "type": "string"
-    }, {
-      "name": "name",
-      "type": "string"
-    }],
-    "name": "",
-    "type": "tuple[]"
-  }],
-  "payable": false,
-  "stateMutability": "view",
-  "type": "function"
-}, {
-  "constant": true,
-  "inputs": [{
     "name": "_id",
     "type": "uint64"
   }],
@@ -416,6 +362,39 @@ var abiProduct = [{
     }],
     "name": "",
     "type": "tuple"
+  }],
+  "payable": false,
+  "stateMutability": "view",
+  "type": "function"
+}, {
+  "constant": true,
+  "inputs": [],
+  "name": "getAll",
+  "outputs": [{
+    "components": [{
+      "name": "id",
+      "type": "uint64"
+    }, {
+      "name": "MFG",
+      "type": "uint64"
+    }, {
+      "name": "EXP",
+      "type": "uint64"
+    }, {
+      "name": "state",
+      "type": "uint8"
+    }, {
+      "name": "idChipIOT",
+      "type": "uint64"
+    }, {
+      "name": "manufacturer",
+      "type": "string"
+    }, {
+      "name": "name",
+      "type": "string"
+    }],
+    "name": "",
+    "type": "tuple[]"
   }],
   "payable": false,
   "stateMutability": "view",
@@ -649,7 +628,11 @@ var abiWarranty = [{
   "stateMutability": "nonpayable",
   "type": "constructor"
 }]
-var addressContractMaster = '0x5bafaff9832f342a20bd3c3b24455059d3f933a5'
+
+
+
+
+var addressContractMaster = '0xf79107d581fcf37369318aaa282aec6c762f77d3'
 var addressContractCustomer = localStorage.getItem('addressContractCustomer');
 var addressContractProduct = localStorage.getItem('addressContractProduct');
 var addressContractEC = '0x36c5804a3f063487c0dc09ae93e47fc6f584f136'
@@ -670,7 +653,7 @@ console.log("Contract Customer:", addressContractCustomer)
 if (typeof web3 !== 'undefined') {
   web3 = new Web3(web3.currentProvider);
 } else {
-  web3 = new Web3(new Web3.providers.HttpProvider("https://ropsten.infura.io/v3/79cbd8b8559f4ec1a9bbd610a8952077"));
+  web3 = new Web3(new Web3.providers.HttpProvider("http://127.0.0.1:8545"));
 }
 ContractMaster = new web3.eth.Contract(abiMaster, addressContractMaster);
 ContractProduct = new web3.eth.Contract(abiProduct, addressContractProduct);

@@ -1,6 +1,6 @@
 <script>
     accf().then(acc=>{
-        ContractMaster.methods.getListContract(10,0,1).call({
+        ContractMaster.methods.getListContract(1).call({
                 from: acc,
                 gasPrice: gasPrice,
                 gasLimit: gasLimit
@@ -12,7 +12,7 @@
                 }
             });
         });
-        ContractMaster.methods.getListContract(10,0,2).call({
+        ContractMaster.methods.getListContract(2).call({
                 from: acc,
                 gasPrice: gasPrice,
                 gasLimit: gasLimit
@@ -42,7 +42,6 @@
             $('#homeAddr').val(datas['homeAddr']);
             $('#phone').val(datas['phoneNumber']);
             $('#age').val(datas['age']);
-            $('#type').val(datas['Type']);
             $('#AddressCustomer').val(datas['addressCustomer']);
             $('#AddressProduct').val(datas['addressProduct']);
         });
@@ -55,13 +54,12 @@
         var name = $('#name').val();
         var homeAddr = $('#homeAddr').val();
         var phone = $('#phone').val();
-        var type = parseInt($('#type').val());
         var AddressCustomer = $('#AddressCustomer').val();
         var AddressProduct = $('#AddressProduct').val();
         var acc = await accf();
 
        <% if(type==1) { %>
-        ContractMaster.methods.registerAgency(address, name, homeAddr, phone, type,AddressCustomer,AddressProduct).send({
+        ContractMaster.methods.registerAgency(address, name, homeAddr, phone,AddressCustomer,AddressProduct).send({
             from: acc,
             gasPrice: gasPrice,
             gasLimit: gasLimit
@@ -70,7 +68,7 @@
             history.go(-1)
         });
         <% }else if(type==2) { %>
-        ContractMaster.methods.updateAgency(address, name, homeAddr, phone, type,AddressCustomer,AddressProduct).send({
+        ContractMaster.methods.updateAgency(address, name, homeAddr, phone,AddressCustomer,AddressProduct).send({
             from: acc,
             gasPrice: gasPrice,
             gasLimit: gasLimit

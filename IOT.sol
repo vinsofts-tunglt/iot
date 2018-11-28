@@ -323,16 +323,7 @@ contract Customer {
     }
     
     function getAll(uint256 _soluong,uint256 _batdautu) onlyDaily external view returns(Person[]) {
-        require(_soluong<=50,"So luong khong duoc qua 50");
-        Person[] memory temp = new Person[](_soluong);
-        uint8 counter = 0;
-        for (uint i = _batdautu; i < _soluong; i++) {
-            if(personsarray.length>i){
-                temp[counter] = personsarray[i];
-                counter++;
-            }
-        }
-        return temp;
+        return personsarray;
     }
 }
 
@@ -400,17 +391,8 @@ contract Products is Owner {
         return productsmap[_id];
     }
     
-    function getAll(uint256 _soluong,uint256 _batdautu) onlyDaily external view returns(Product[]) {
-        require(_soluong<=50,"So luong khong duoc qua 50");
-        Product[] memory temp = new Product[](_soluong);
-        uint8 counter = 0;
-        for (uint i = _batdautu; i < _soluong; i++) {
-            if(products.length>i){
-                temp[counter] = products[i];
-                counter++;
-            }
-        }
-        return temp;
+    function getAll() onlyDaily external view returns(Product[]) {
+        return products;
     }
 }
 
@@ -420,8 +402,8 @@ contract Products is Owner {
 
 contract Warranty is Owner {
     
-    address ecAddress = 0x36c5804a3f063487c0dc09ae93e47fc6f584f136;
-    address addressMaster = 0xcc92ea0c9362ff7924b9def04ede29058f05aeff;
+    address private ecAddress = 0x36c5804a3f063487c0dc09ae93e47fc6f584f136;
+    address private addressMaster = 0xf79107d581fcf37369318aaa282aec6c762f77d3;
     
     struct Convention {
         uint64 expireTime;
@@ -619,7 +601,6 @@ contract Master is Owner {
         string _name, 
         string _homeAddr, 
         string _phoneNumber,
-        uint8 _Type,
         address _addrCustomer,
         address _addrProduct
     ) 
@@ -628,7 +609,7 @@ contract Master is Owner {
     {
         require(agencymap[_owner].owner == 0);
         uint idauto = uint(agencys.length+1);
-        Agency memory newAgency = Agency(idauto,_owner, _name, _homeAddr, _phoneNumber, _Type, _addrCustomer, _addrProduct);
+        Agency memory newAgency = Agency(idauto,_owner, _name, _homeAddr, _phoneNumber, 1, _addrCustomer, _addrProduct);
         agencymap[_owner] = newAgency;
         agencys.push(newAgency);
     }
@@ -671,45 +652,24 @@ contract Master is Owner {
         return agencymap[_owner];
     }
     
-    function getAll(uint256 _soluong,uint256 _batdautu) onlyAdmin view returns(Agency[]) {
-        require(_soluong<=50,"So luong khong duoc qua 50");
-        Agency[] memory temp = new Agency[](_soluong);
-        uint8 counter = 0;
-        for (uint i = _batdautu; i < _soluong; i++) {
-            if(agencys.length>i){
-                temp[counter] = agencys[i];
-                counter++;
-            }
-        }
-        return temp;
+    function getAll() onlyAdmin view returns(Agency[]) {
+        return agencys;
     }
     
-    function saveListContract(address _contract,uint8 _loai) public onlyAdmin2 {
+    function saveListContract(address _contract,uint8 _type) public onlyAdmin2 {
         require(_contract != 0x0);
-        if(_loai==1){
+        if(_type==1){
             ListContractCustomer.push(ContractHitorys(0x0,_contract)); 
-        }else if(_loai==2){
+        }else if(_type==2){
             ListContractProduct.push(ContractHitorys(0x0,_contract));
         }
     }
     
-    function getListContract(uint256 _soluong,uint256 _batdautu,uint8 _loai) onlyAdmin view returns(ContractHitorys[]) {
-        require(_soluong<=50,"So luong khong duoc qua 50");
-        ContractHitorys[] memory temp = new ContractHitorys[](_soluong);
-        uint8 counter = 0;
-        for (uint i = _batdautu; i < _soluong; i++) {
-            if(_loai==1){
-                if(ListContractCustomer.length>i){
-                    temp[counter] = ListContractCustomer[i];
-                    counter++;
-                }  
-            }else if(_loai==2){
-                if(ListContractProduct.length>i){
-                    temp[counter] = ListContractProduct[i];
-                    counter++;
-                }
-            }
+    function getListContract(uint8 _type) onlyAdmin view returns(ContractHitorys[]) {
+        if(_type==1){
+            return ListContractCustomer;
+        }else{
+            return ListContractProduct;
         }
-        return temp;
     }
 }
