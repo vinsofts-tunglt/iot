@@ -29,16 +29,33 @@
     <script type="text/javascript" src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <script src="web3.min.js"></script>
     <script src="BE/common/config.js"></script>
+    <% if(id.length<5){ %>
+    <script>
+        alert('Contracts do not exist')
+        location.href = '/';
+    </script>
+    <% }else{ %>
+    <script>
+        try {
+            var contractWarranty = new web3.eth.Contract(abiWarranty, '<%=id%>');
+        } catch (error) {
+            alert('Contracts do not exist')
+            location.href = '/';
+        }
+    </script>
+    <% } %>
 </head>
 
 <!-- HTML code from Bootply.com editor -->
 
 <body>
 
-    <div class="row panel panel-success" style="margin-top:2%;">
+    <div class="row panel panel-success">
         <div class="panel-heading lead">
             <div class="row">
-                <div class="col-lg-8 col-md-8"><i class="fa fa-users"></i> View Warranty Details <%=id %></div>
+                <div class="col-lg-8 col-md-8"><i class="fa fa-users"></i> View Warranty Details
+                    <%=id %>
+                </div>
                 <div class="col-lg-4 col-md-4 text-right">
                     <a href="/" class="btn btn success">Home</a>
                 </div>
@@ -91,10 +108,11 @@
                                     <tbody>
                                         <tr>
                                             <td class="text-center">
-                                                <span class="btn btn-danger text-success btn-block"><i class="fa fa-rupee"></i>
-                                                    Unpaid</span>
+                                                <span onclick="myFunction()" class="btn btn-danger text-success btn-block"><i
+                                                        class="fa fa-rupee"></i>
+                                                    In Phiếu</span>
                                                 <a href="#" class="btn btn-success btn-block" data-toggle="modal"
-                                                    data-target="#PhotoOption"><i class="fa fa-photo"></i> Change</a>
+                                                    data-target="#PhotoOption"><i class="fa fa-photo"></i> Báo Hỏng</a>
                                             </td>
                                         </tr>
 
@@ -106,23 +124,20 @@
                             <ul class="nav nav-tabs">
                                 <li class="active"><a data-toggle="tab" href="#Summery" class="text-success"><i class="fa fa-indent"></i>
                                         Summery</a></li>
-                                <li><a data-toggle="tab" href="#Contact" class="text-success"><i class="fa fa-bookmark-o"></i>
-                                        Bên A</a></li>
-                                <li><a data-toggle="tab" href="#Address" class="text-success"><i class="fa fa-home"></i>
-                                        Bên B</a></li>
-                                <li><a data-toggle="tab" href="#General" class="text-success"><i class="fa fa-info"></i>
-                                        Product</a></li>
                             </ul>
-
                             <div class="tab-content">
                                 <div id="Summery" class="tab-pane fade in active">
-                                    anh
-                                </div>
-                                <div id="Contact" class="tab-pane fade">
                                     <div class="table-responsive panel">
                                         <table class="table">
                                             <tbody>
-
+                                                <tr>
+                                                    <td class="text-success"><i class="fa fa-users"></i> Name A</td>
+                                                    <td id="nameA"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-success"><i class="fa fa-phone"></i> Phone</td>
+                                                    <td id="phoneA"></td>
+                                                </tr>
                                                 <tr>
                                                     <td class="text-success"><i class="fa fa-sort-numeric-desc"></i> ID</td>
                                                     <td id="idA"></td>
@@ -137,37 +152,50 @@
                                                     <td id="typeA"></td>
                                                 </tr>
                                                 <tr>
-                                                    <td class="text-success"><i class="fa fa-arrow-circle-o-right"></i> Address ETH</td>
+                                                    <td class="text-success"><i class="fa fa-arrow-circle-o-right"></i>
+                                                        Address ETH</td>
                                                     <td id="addressA"></td>
                                                 </tr>
 
                                             </tbody>
                                         </table>
-                                    </div>
-                                </div>
-                                <div id="Address" class="tab-pane fade">
-                                    <div class="table-responsive panel">
+                                        <hr />
                                         <table class="table">
                                             <tbody>
+                                                <tr>
+                                                    <td class="text-success"><i class="fa fa-users"></i> Name B</td>
+                                                    <td id="nameB"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-success"><i class="fa fa-phone"></i> Phone</td>
+                                                    <td id="phoneB"></td>
+                                                </tr>
                                                 <tr>
                                                     <td class="text-success"><i class="fa fa-home"></i> Home Address</td>
                                                     <td id="homeB"></td>
                                                 </tr>
                                                 <tr>
-                                                        <td class="text-success"><i class="fa fa-bookmark"></i> Address ETH</td>
-                                                        <td id="addressB"></td>
-                                                    </tr>
+                                                    <td class="text-success"><i class="fa fa-bookmark"></i> Address ETH</td>
+                                                    <td id="addressB"></td>
+                                                </tr>
                                             </tbody>
                                         </table>
-                                    </div>
-                                </div>
-
-                                <div id="General" class="tab-pane fade">
-                                    <div class="table-responsive panel">
+                                        <hr />
                                         <table class="table">
                                             <tbody>
                                                 <tr>
-                                                    <td class="text-success"><i class="fa fa-university"></i> Product Id</td>
+                                                    <td class="text-success"><i class="fa fa-bookmark"></i> Name
+                                                        Product</td>
+                                                    <td id="nameProduct"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-success"><i class="fa fa-sort-numeric-desc"></i>
+                                                        Manufacturer</td>
+                                                    <td id="manufacturerProduct"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-success"><i class="fa fa-university"></i> Product
+                                                        Id</td>
                                                     <td id="productId"></td>
                                                 </tr>
                                                 <tr>
@@ -196,15 +224,12 @@
         </div>
     </div>
 
+
     <script>
         window.addEventListener('load', async function () {
             acc = await accf();
-            contractWarranty = new web3.eth.Contract(abiWarranty, '<%=id%>');
             var detail = await contractWarranty.methods.convention().call();
-            console.log(detail);
-            var product = await ContractProduct.methods.productDetail(detail['idProduct']).call({
-                from: acc
-            });
+            var product = await ContractProduct.methods.productDetail(detail['idProduct']).call();
             $("#nameProduct").text(product["name"])
             $("#manufacturerProduct").text(product['manufacturer'])
             $("#MFG").text(product['MFG'])
@@ -231,13 +256,16 @@
 
             //get ben B
             var uB = await ContractCustomer.methods.accountDetail(detail['buyer']).call();
-            console.log(uB)
-
             $("#nameB").text(uB['name'])
             $("#phoneB").text(uB['phoneNumber'])
             $("#homeB").text(uB['homeAddr'])
             $("#addressB").text(detail['buyer'])
         })
+    </script>
+    <script>
+        function myFunction() {
+            window.print();
+        }
     </script>
 </body>
 
