@@ -684,18 +684,23 @@ var changeAccRole = (acc) => {
       $("#currentAccount").text(`Hi: ${datas['name']}: ${acc}`)
       if (datas['Type'] == 1) {
         if ($("#login").length == 0) {
-          $("#loginhiiden").append(`<li id="login"><a href="master">Login</a></li>`)
+          $("#loginhiiden").append(`<li id="login"><a href="master">Dashboard</a></li>`)
         }
       } else if (datas['Type'] == 2) {
         localStorage.setItem('addressContractCustomer', datas['addressCustomer']);
         localStorage.setItem('addressContractProduct', datas['addressProduct']);
         if ($("#login").length == 0) {
-          $("#loginhiiden").append(`<li id="login"><a href="admin" >Login</a></li>`)
+          $("#loginhiiden").append(`<li id="login"><a href="admin" >Dashboard</a></li>`)
         }
       } else {
         // truong hợp là khác hàng hệ thống
       }
       $("#login").css('display', 'block')
+      if ($("#currentAccount").length == 0) {
+        $("#loginhiiden").append(`
+        <li id="currentAccountli"><a href="#contact" id="currentAccount"></a></li>`)
+      }
+     
     });
   } catch (error) {
     $("#currentAccountli").css('display', 'none')
@@ -706,4 +711,4 @@ var changeAccRole = (acc) => {
 setInterval(async () => {
   var accs = await accf();
   changeAccRole(accs);
-}, 2000);
+}, 1);
